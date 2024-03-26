@@ -1,6 +1,7 @@
 from vector_stores.base import VectorStoreInterface
 from annoy import AnnoyIndex
 from typing import Tuple
+import os
 class AnnoyStore(VectorStoreInterface):
     def __init__(self, embedding_size: int, metric='angular', index_file='query_index.ann'):
         self.index = AnnoyIndex(embedding_size, metric)
@@ -16,6 +17,8 @@ class AnnoyStore(VectorStoreInterface):
         self.index.save(self.index_file)
 
     def search(self, embedding: list, top_n: int = 1, include_distances=True) -> Tuple[list, list]:
+        if not os.path.exists(self.index_file):
+            raise FileNotFoundError(f"Index file {self.index_file} does not exist. Ensure you have built the index.")
         self.index.load(self.index_file)
         return self.index.get_nns_by_vector(vector=embedding, n=top_n, include_distances=include_distances)
 

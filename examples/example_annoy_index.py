@@ -35,7 +35,7 @@ for pair in query_response_pairs:
     response = pair['response']
     semantic_cache.add_query_to_index(query, response)
 
-# vector_store.build(num_trees=10)
+vector_store.build(num_trees=10)
 
 similar_queries = [
     "What's the main city of France?",
