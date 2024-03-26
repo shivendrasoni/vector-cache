@@ -1,0 +1,4 @@
+venv
+**/*.ann
+.idea
+__pycache__
