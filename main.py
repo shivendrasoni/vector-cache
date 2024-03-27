@@ -1,7 +1,9 @@
+from embedding.sentence_bert import SentenceBertEmbeddings
 from utils.time_utils import time_measurement
 from cache_storage.base import CacheStorageInterface
 from vector_stores.base import VectorStoreInterface
 from embedding.base_embedding import BaseEmbedding
+from functools import wraps
 
 import asyncio
 
@@ -38,4 +40,28 @@ class SemanticCache:
                 cached_response = self.db.get_response(nearest_index)
                 return cached_response, distance
         return None, None
+
+
+def semantic_cache_decorator(semantic_cache: SemanticCache):
+    def decorator(func):
+        def wrapper(query, *args, **kwargs):
+            # Try to find a cached response
+            cached_response, distance = semantic_cache.find_similar_queries(query)
+            if cached_response is not None:
+                # If a cached response exists, return it
+                print(f"Cache Hit: Query: {query}, response: {cached_response} (distance: {distance})")
+                return cached_response
+
+            print("Cache Miss: ", query)
+            # If there is no cached response, call the actual function
+            query, response = func(query, *args, **kwargs)
+
+            # Add the query-response pair to the cache
+            semantic_cache.add_query_to_index(query, response)
+
+            # Return the actual function's response
+            return response
+        return wrapper
+    return decorator
+
 
