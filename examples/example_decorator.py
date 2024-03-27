@@ -2,7 +2,7 @@ from vector_stores.chroma_db import ChromeDB
 from embedding.sentence_bert import SentenceBertEmbeddings
 from cache_storage.redis_store import RedisStorage
 from main import SemanticCache
-from main import cache_decorator
+from main import semantic_cache_decorator
 
 model = SentenceBertEmbeddings()
 db = RedisStorage()
@@ -31,7 +31,7 @@ query_response_pairs = [
     {'query': "What is the capital of Japan?", 'response': "The capital of Japan is Tokyo."}
 ]
 
-@cache_decorator(semantic_cache)
+@semantic_cache_decorator(semantic_cache)
 def call_llm(query, **kwargs):
     if 'response' in kwargs:
         response = kwargs['response']
