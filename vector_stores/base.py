@@ -4,7 +4,7 @@ from typing import Tuple
 
 class VectorStoreInterface(ABC):
     @abstractmethod
-    def add(self, embedding: list, **kwargs):
+    def add(self, embedding: list, **kwargs) -> str:
         pass
 
     @abstractmethod

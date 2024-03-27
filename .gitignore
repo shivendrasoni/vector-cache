@@ -2,3 +2,4 @@ venv
 **/*.ann
 .idea
 __pycache__
+**/chroma

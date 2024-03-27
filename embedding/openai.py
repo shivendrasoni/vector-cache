@@ -1,15 +1,17 @@
-from base_embedding import BaseEmbedding
+from embedding.base_embedding import BaseEmbedding
 import openai
+from openai.types import CreateEmbeddingResponse, Embedding
+from openai import OpenAI
 
 class OpenAIEmbeddings(BaseEmbedding):
-    def __init__(self, api_key, model_name="text-similarity-babbage-001"):
+    def __init__(self, api_key, model_name="text-embedding-ada-002"):
         """
         Initialize the OpenAI Embeddings with the desired model.
 
         :param api_key: Your OpenAI API key.
         :param model_name: The model to use for generating embeddings.
         """
-        openai.api_key = api_key
+        self.client = OpenAI(api_key=api_key)
         self.model_name = model_name
         self._dimension = None  # Lazy-loaded embedding dimension
         self.model_to_dimension_mapping = {
@@ -24,16 +26,13 @@ class OpenAIEmbeddings(BaseEmbedding):
         :param text: A string or a list of strings for which to generate embeddings.
         :return: The generated embeddings.
         """
-        response = openai.Embedding.create(
-            input=text,
-            model=self.model_name,
-            **kwargs
-        )
-        # Extract embeddings from the response
+        text = text.replace("\n", " ")
+        response = self.client.embeddings.create(input = [text], model=self.model_name)
         if isinstance(text, list):
-            return [item['embedding'] for item in response['data']]
+            return [item.embedding for item in response.data]
         else:
-            return response['data'][0]['embedding']
+            return response.data[0].embedding
+
 
     def get_embedding_dimension(self):
         """
