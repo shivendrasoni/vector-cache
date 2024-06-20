@@ -2,7 +2,7 @@ import uuid
 
 from chromadb import QueryResult
 
-from vector_stores.base import VectorStoreInterface
+from src.vector_stores.base import VectorStoreInterface
 from typing import Tuple, List
 import chromadb
 class ChromeDB(VectorStoreInterface):

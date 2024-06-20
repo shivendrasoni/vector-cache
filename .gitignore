@@ -3,3 +3,7 @@ venv
 .idea
 __pycache__
 **/chroma
+build
+dist
+src/semantic_cache.egg-info
+*.rdb

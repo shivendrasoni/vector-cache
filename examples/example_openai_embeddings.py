@@ -1,7 +1,7 @@
-from vector_stores.chroma_db import ChromeDB
-from embedding.openai import OpenAIEmbeddings
-from cache_storage.redis_store import RedisStorage
-from main import SemanticCache
+from src.vector_stores.chroma_db import ChromeDB
+from src.embedding.openai import OpenAIEmbeddings
+from src.cache_storage.redis_store import RedisStorage
+from src.main import SemanticCache
 
 model = OpenAIEmbeddings()
 db = RedisStorage()

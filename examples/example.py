@@ -1,7 +1,7 @@
-from vector_stores.chroma_db import ChromeDB
-from embedding.sentence_bert import SentenceBertEmbeddings
-from cache_storage.redis_store import RedisStorage
-from main import SemanticCache
+from src.vector_stores.chroma_db import ChromeDB
+from src.embedding.sentence_bert import SentenceBertEmbeddings
+from src.cache_storage.redis_store import RedisStorage
+from src.main import SemanticCache
 
 model = SentenceBertEmbeddings()
 db = RedisStorage()

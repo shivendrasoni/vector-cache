@@ -1,4 +1,4 @@
-from embedding.base_embedding import BaseEmbedding
+from src.embedding.base_embedding import BaseEmbedding
 from sentence_transformers import SentenceTransformer
 
 
