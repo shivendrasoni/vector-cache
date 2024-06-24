@@ -24,6 +24,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install setuptools wheel
       - name: Build package
+        env:
+          RELEASE_VERSION: ${{ github.event.release.tag_name }}
         run: |
           python setup.py sdist bdist_wheel  # Could also be python -m build
       - name: Publish package distributions to PyPI

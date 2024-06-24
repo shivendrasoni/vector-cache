@@ -1,5 +1,8 @@
+import os
 import setuptools
-VERSION = "0.0.4"
+
+# Read version from environment variable or default to "0.0.1"
+VERSION = os.getenv("RELEASE_VERSION", "0.0.1")
 NAME = "vector-cache"
 
 # Read long description from README.md
