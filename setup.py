@@ -10,9 +10,10 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 # Read the list of requirements from requirements.txt
-with open("./requirements.txt", "r") as fh:
-    requirements = fh.read().splitlines()
-
+requirements = []
+if os.path.isfile("requirements.txt"):
+    with open("requirements.txt", "r") as fh:
+        requirements = fh.read().splitlines()
 
 setuptools.setup(
     name=NAME,  # This is the name of the package
@@ -21,7 +22,8 @@ setuptools.setup(
     description="A streamlined Python library that enhances LLM query performance through semantic caching, making responses faster and more cost-effective.",
     long_description=long_description,  # Long description read from the readme file
     long_description_content_type="text/markdown",
-    packages=setuptools.find_packages(),  # List of all python modules to be installed
+    packages=setuptools.find_packages(where='src'),  # List of all python modules to be installed
+    package_dir={'': 'src'},  # Directory of the source code of the package
     project_urls={
         "Source Code": "https://github.com/shivendrasoni/vector-cache",
     },
@@ -31,7 +33,5 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],  # Information to filter the project on PyPi website
     python_requires='>=3.9',  # Minimum version requirement of the package
-    py_modules=["vector-cache"],  # Name of the python package
-    package_dir={'': 'src'},  # Directory of the source code of the package
     install_requires=requirements  # Install dependencies from requirements.txt
 )

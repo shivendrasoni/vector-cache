@@ -23,10 +23,10 @@ class PineconeVectorStore(VectorStoreInterface):
 
     def add(self, embedding: list, **kwargs):
         """
-        Add an embedding to the Pinecone index.
+        Add an vector_cache.embedding to the Pinecone index.
 
         Parameters:
-        - embedding: The embedding to add, as a numpy array.
+        - vector_cache.embedding: The vector_cache.embedding to add, as a numpy array.
 
         Returns:
         - A reference to the index where it's stored (in Pinecone, this is the 'id').
@@ -46,7 +46,7 @@ class PineconeVectorStore(VectorStoreInterface):
         Search for similar embeddings in the Pinecone index.
 
         Parameters:
-        - embedding: The query embedding, as a numpy array.
+        - vector_cache.embedding: The query vector_cache.embedding, as a numpy array.
         - top_n: The number of top similar results to return.
         - include_distances: Whether to include distances in the results.
 

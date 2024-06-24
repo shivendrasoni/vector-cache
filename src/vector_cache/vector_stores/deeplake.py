@@ -1,4 +1,3 @@
-from abc import ABC, abstractmethod
 from typing import Tuple
 import deeplake  # Hypothetical, replace with actual DeepLake client import
 import numpy as np
@@ -21,10 +20,10 @@ class DeepLakeVectorStore(VectorStoreInterface):
 
     def add(self, embedding: list, **kwargs):
         """
-        Add an embedding to the DeepLake index.
+        Add an vector_cache.embedding to the DeepLake index.
 
         Parameters:
-        - embedding: The embedding to add, as a numpy array.
+        - vector_cache.embedding: The vector_cache.embedding to add, as a numpy array.
 
         Returns:
         - A reference to the index where it's stored (in DeepLake, this might be an 'id').
@@ -45,7 +44,7 @@ class DeepLakeVectorStore(VectorStoreInterface):
         Search for similar embeddings in the DeepLake index.
 
         Parameters:
-        - embedding: The query embedding, as a numpy array.
+        - vector_cache.embedding: The query vector_cache.embedding, as a numpy array.
         - top_n: The number of top similar results to return.
         - include_distances: Whether to include distances in the results.
 

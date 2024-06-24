@@ -24,12 +24,12 @@ VectorCache, akin to a more nuanced Redis, enables efficient caching by recogniz
 - Ensure Python version is **3.8.1 or higher** (`python --version`).
 - For library installation issues, upgrade pip: `python -m pip install -r requirements.txt`.
 
-- `pip install vector-cache`
+- `pip install vector_cache`
 
 - Refer to the `examples` folder for sample usage.
 
 VectorCache is designed to work with any LLM provider. It includes modules for:
-- **Embedding Models**: Facilitates similarity searches through various embedding APIs.
+- **Embedding Models**: Facilitates similarity searches through various vector_cache.embedding APIs.
 - **Cache Storage**: Stores LLM responses for future retrieval based on semantic matches.
 - **Vector Store**: Identifies similar requests using the input request's embeddings.
 - **Cache Manager**: Manages cache storage and vector store operations, including eviction policies.

@@ -15,7 +15,7 @@ class SentenceBertEmbeddings(BaseEmbedding):
     @property
     def dimension(self):
         """
-        The embedding dimension based on the model.
+        The vector_cache.embedding dimension based on the model.
 
         :return: An integer representing the size of the embeddings.
         """
