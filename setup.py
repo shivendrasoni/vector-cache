@@ -9,8 +9,8 @@ with open("./requirements.txt", "r") as fh:
     requirements = fh.read().splitlines()
 
 setuptools.setup(
-    name="semantic-cache",  # This is the name of the package
-    version="0.0.6",  # The initial release version
+    name="vector-cache",  # This is the name of the package
+    version="0.0.2",  # The initial release version
     author="Shivendra Soni",  # Full name of the author
     description="A streamlined Python library that enhances LLM query performance through semantic caching, making responses faster and more cost-effective.",
     long_description=long_description,  # Long description read from the readme file
@@ -22,7 +22,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],  # Information to filter the project on PyPi website
     python_requires='>=3.9',  # Minimum version requirement of the package
-    py_modules=["semantic-cache"],  # Name of the python package
+    py_modules=["vector-cache"],  # Name of the python package
     package_dir={'': 'src'},  # Directory of the source code of the package
     install_requires=requirements  # Install dependencies from requirements.txt
 )

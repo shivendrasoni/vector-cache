@@ -2,12 +2,9 @@ from utils.time_utils import time_measurement
 from cache_storage.base import CacheStorageInterface
 from vector_stores.base import VectorStoreInterface
 from embedding.base_embedding import BaseEmbedding
-from functools import wraps
-
-import asyncio
 
 
-class SemanticCache:
+class VectorCache:
     def __init__(self, embedding_model: BaseEmbedding, db: CacheStorageInterface, vector_store: VectorStoreInterface,
                  cosine_threshold):
         self.embedding_model = embedding_model
@@ -42,7 +39,7 @@ class SemanticCache:
         return None, None
 
 
-def semantic_cache_decorator(semantic_cache: SemanticCache):
+def semantic_cache_decorator(semantic_cache: VectorCache):
     def print_log(log):
         if semantic_cache.verbose:
             print(log)
