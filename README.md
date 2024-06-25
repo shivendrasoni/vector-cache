@@ -2,7 +2,7 @@
 
 A streamlined Python library that enhances LLM query performance through semantic caching, making responses faster and more cost-effective.
 
-![Pypi Build](https://github.com/shivendrasoni/vector-cache/actions/workflows/publish/badge.svg)
+![Pypi Build](https://github.com/shivendrasoni/vector-cache/actions/workflows/publish.yml/badge.svg)
 
 ## What is VectorCache?
 
