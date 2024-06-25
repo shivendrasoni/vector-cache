@@ -2,7 +2,7 @@ from typing import Tuple
 import pinecone  # Make sure to install Pinecone client
 import numpy as np
 import uuid
-from src.vector_stores.base import VectorStoreInterface
+from vector_cache.vector_stores.base import VectorStoreInterface
 
 
 class PineconeVectorStore(VectorStoreInterface):

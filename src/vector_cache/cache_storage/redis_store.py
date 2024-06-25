@@ -1,4 +1,4 @@
-from src.cache_storage.base import CacheStorageInterface
+from vector_cache.cache_storage.base import CacheStorageInterface
 import redis
 
 

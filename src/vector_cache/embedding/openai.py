@@ -1,4 +1,4 @@
-from src.embedding.base_embedding import BaseEmbedding
+from vector_cache.embedding.base_embedding import BaseEmbedding
 import openai
 from openai.types import CreateEmbeddingResponse, Embedding
 from openai import OpenAI

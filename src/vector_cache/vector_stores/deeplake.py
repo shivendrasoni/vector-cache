@@ -2,7 +2,7 @@ from typing import Tuple
 import deeplake  # Hypothetical, replace with actual DeepLake client import
 import numpy as np
 import uuid
-from src.vector_stores.base import VectorStoreInterface
+from vector_cache.vector_stores.base import VectorStoreInterface
 #WIP : DO NOT USE YET
 class DeepLakeVectorStore(VectorStoreInterface):
     def __init__(self, index_name: str, api_key: str):

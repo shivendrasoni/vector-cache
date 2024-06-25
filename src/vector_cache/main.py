@@ -1,7 +1,7 @@
-from utils.time_utils import time_measurement
-from cache_storage.base import CacheStorageInterface
-from vector_stores.base import VectorStoreInterface
-from embedding.base_embedding import BaseEmbedding
+from vector_cache.utils.time_utils import time_measurement
+from vector_cache.cache_storage.base import CacheStorageInterface
+from vector_cache.vector_stores.base import VectorStoreInterface
+from vector_cache.embedding.base_embedding import BaseEmbedding
 
 
 class VectorCache:
