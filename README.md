@@ -21,10 +21,12 @@ VectorCache, akin to a more nuanced Redis, enables efficient caching by recogniz
 ### 😊 Getting Started
 
 **Prerequisites**:
-- Ensure Python version is **3.8.1 or higher** (`python --version`).
-- For library installation issues, upgrade pip: `python -m pip install -r requirements.txt`.
+- Ensure Python version is **3.9 or higher** (`python --version`).
+- - `pip install vector-cache`
 
-- `pip install vector_cache`
+- Install from source
+  - For library installation issues, upgrade pip: `python -m pip install -r requirements.txt`.
+
 
 - Refer to the `examples` folder for sample usage.
 
