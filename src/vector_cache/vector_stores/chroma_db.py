@@ -1,6 +1,7 @@
 import uuid
 
 from chromadb import QueryResult
+from chromadb.db.base import UniqueConstraintError
 
 from vector_cache.vector_stores.base import VectorStoreInterface
 from typing import Tuple
@@ -15,7 +16,11 @@ class ChromeDB(VectorStoreInterface):
         else:
             self.chroma_client = chromadb.Client()
 
-        self.collection = self.chroma_client.create_collection(name=collection)
+        try:
+            self.collection = self.chroma_client.create_collection(name=collection)
+        except UniqueConstraintError:
+            print(f"Collection {collection} already exists")
+            self.collection = self.chroma_client.get_collection(name=collection)
 
     def add(self, embedding: list, **kwargs) -> str:
         id = str(uuid.uuid4())

@@ -4,7 +4,7 @@ from openai.types import CreateEmbeddingResponse, Embedding
 from openai import OpenAI
 
 class OpenAIEmbeddings(BaseEmbedding):
-    def __init__(self, api_key, model_name="text-vector_cache.embedding-ada-002"):
+    def __init__(self, api_key, model_name="text-embedding-ada-002"):
         """
         Initialize the OpenAI Embeddings with the desired model.
 
@@ -14,9 +14,12 @@ class OpenAIEmbeddings(BaseEmbedding):
         self.client = OpenAI(api_key=api_key)
         self.model_name = model_name
         self._dimension = None  # Lazy-loaded vector_cache.embedding dimension
+
+        # TODO: Move this to config or constants
         self.model_to_dimension_mapping = {
-            "text-similarity-babbage-001": 512,
-            "text-similarity-ada-002": 1536
+            "text-embedding-3-large": 3072,
+            "text-embedding-3-small": 1536,
+            "text-embedding-ada-002": 1536
         }
 
     def get_embeddings(self, text, **kwargs):

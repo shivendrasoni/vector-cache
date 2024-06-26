@@ -6,12 +6,12 @@ from vector_cache.embedding.base_embedding import BaseEmbedding
 
 class VectorCache:
     def __init__(self, embedding_model: BaseEmbedding, db: CacheStorageInterface, vector_store: VectorStoreInterface,
-                 cosine_threshold):
+                 cosine_threshold, verbose=False):
         self.embedding_model = embedding_model
         self.db = db
         self.vector_store = vector_store
         self.cosine_threshold = cosine_threshold
-        self.verbose = False
+        self.verbose = verbose
 
     @time_measurement
     def add_query_to_index(self, query: str, response: str):
@@ -54,7 +54,7 @@ def semantic_cache_decorator(semantic_cache: VectorCache):
                 return cached_response
             print_log(f"Cache Miss: {query}")
             # If there is no cached response, call the actual function
-            query, response = func(query, *args, **kwargs)
+            response = func(query, *args, **kwargs)
 
             # Add the query-response pair to the cache
             semantic_cache.add_query_to_index(query, response)
