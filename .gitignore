@@ -5,5 +5,5 @@ __pycache__
 **/chroma
 build
 dist
-src/semantic_cache.egg-info
 *.rdb
+/*/vector_cache.egg-info/
