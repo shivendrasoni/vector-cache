@@ -1,1 +1,1 @@
-from .chroma_db import ChromeDB
+from .chroma_db import ChromaDB

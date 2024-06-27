@@ -1,5 +1,5 @@
 from vector_cache import VectorCache, semantic_cache_decorator
-from vector_cache.vector_stores import ChromeDB
+from vector_cache.vector_stores import ChromaDB
 from vector_cache.embedding import SentenceBertEmbeddings
 from vector_cache.cache_storage import RedisStorage
 
@@ -8,7 +8,7 @@ db = RedisStorage()
 embedding_size = model.dimension
 # Initialize components
 
-vector_store = ChromeDB()
+vector_store = ChromaDB()
 semantic_cache = VectorCache(model, db, vector_store, cosine_threshold=0.8)
 
 

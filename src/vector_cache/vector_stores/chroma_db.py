@@ -6,7 +6,7 @@ from chromadb.db.base import UniqueConstraintError
 from vector_cache.vector_stores.base import VectorStoreInterface
 from typing import Tuple
 import chromadb
-class ChromeDB(VectorStoreInterface):
+class ChromaDB(VectorStoreInterface):
 
     default_collection = 'default_collection'
 
@@ -53,7 +53,7 @@ class ChromeDB(VectorStoreInterface):
             return query_result['ids'][0]
 
 
-    def __enter__(self) -> "ChromeDB":
+    def __enter__(self) -> "ChromaDB":
         return self
 
     def __exit__(self, exc_type, exc_value, traceback) -> None:

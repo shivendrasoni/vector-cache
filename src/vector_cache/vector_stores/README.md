@@ -22,7 +22,7 @@ pip install vector-cache[chromadb]
 
 ```python
 from vector_cache import VectorCache
-from vector_cache.vector_stores import ChromeDB
+from vector_cache.vector_stores import ChromaDB
 from vector_cache.embedding import OpenAIEmbeddings
 from vector_cache.cache_storage import RedisStorage
 import os
@@ -33,7 +33,7 @@ db = RedisStorage()
 embedding_model = OpenAIEmbeddings(api_key=os.environ.get("OPENAI_API_KEY"))
 db = RedisStorage()
 
-vector_store = ChromeDB(persistent=True)
+vector_store = ChromaDB(persistent=True)
 semantic_cache = VectorCache(embedding_model, db, vector_store, cosine_threshold=0.9, verbose=True)
 ```
 
@@ -142,7 +142,7 @@ Example:
 
 ```python
 from vector_cache import VectorCache, semantic_cache_decorator
-from vector_cache.vector_stores import ChromeDB  # Or any other vector store
+from vector_cache.vector_stores import ChromaDB  # Or any other vector store
 from openai import OpenAI
 from vector_cache.embedding import OpenAIEmbeddings
 from vector_cache.cache_storage import RedisStorage
@@ -152,7 +152,7 @@ embedding_model = OpenAIEmbeddings(api_key=os.environ.get("OPENAI_API_KEY"))
 db = RedisStorage()
 
 # Initialize the vector store
-vector_store = ChromeDB(persistent=True)
+vector_store = ChromaDB(persistent=True)
 
 # Create the semantic cache
 semantic_cache = VectorCache(embedding_model, db, vector_store, cosine_threshold=0.9, verbose=True)
