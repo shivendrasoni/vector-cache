@@ -4,13 +4,12 @@ from vector_cache.embedding import OpenAIEmbeddings
 from vector_cache.cache_storage import RedisStorage
 from openai import OpenAI
 import os
-model = OpenAIEmbeddings(api_key=os.environ.get("OPENAI_API_KEY"))
+embedding_model = OpenAIEmbeddings(api_key=os.environ.get("OPENAI_API_KEY"))
 db = RedisStorage()
-embedding_size = model.dimension
 # Initialize components
 
 vector_store = ChromeDB(persistent=True)
-semantic_cache = VectorCache(model, db, vector_store, cosine_threshold=0.9, verbose=True)
+semantic_cache = VectorCache(embedding_model, db, vector_store, cosine_threshold=0.9, verbose=True)
 
 
 @semantic_cache_decorator(semantic_cache)
