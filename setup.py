@@ -15,6 +15,20 @@ if os.path.isfile("requirements.txt"):
     with open("requirements.txt", "r") as fh:
         requirements = fh.read().splitlines()
 
+# Define extras_require for different vector stores
+extras_require = {
+    'chromadb': ['chromadb'],
+    'pgvector': ['psycopg2-binary', 'pgvector'],
+    'qdrant': ['qdrant-client'],
+    'pinecone': ['pinecone-client'],
+    'redis': ['redis'],
+    'memcache': ['pymemcache'],
+    'cohere': ['cohere']
+}
+
+# Add 'all' option which includes all extra dependencies
+extras_require['all'] = list(set(sum(extras_require.values(), [])))
+
 setuptools.setup(
     name=NAME,  # This is the name of the package
     version=VERSION,  # The initial release version
@@ -33,5 +47,6 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],  # Information to filter the project on PyPi website
     python_requires='>=3.9',  # Minimum version requirement of the package
-    install_requires=requirements  # Install dependencies from requirements.txt
+    install_requires=requirements,  # Install dependencies from requirements.txt
+    extras_require=extras_require,  # Optional dependencies for different vector stores
 )
