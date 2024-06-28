@@ -3,14 +3,16 @@ import psycopg2
 from psycopg2.extras import execute_values
 from vector_cache.vector_stores.base import VectorStoreInterface
 from typing import Tuple
+from typing import Union, Callable
+from vector_cache.utils.key_util import get_query_index
 
 class PGVector(VectorStoreInterface):
-    def __init__(self, connection_string: str, table_name: str = "vector_store"):
+    def __init__(self, connection_string: str, table_name: str = "vector_store", identifier: Union[str, Callable, None] = None):
         self.connection_string = connection_string
         self.table_name = table_name
         self.conn = psycopg2.connect(self.connection_string)
         self.create_table()
-
+        self.identifier = identifier
     def create_table(self):
         with self.conn.cursor() as cur:
             cur.execute(f"""
@@ -23,11 +25,11 @@ class PGVector(VectorStoreInterface):
             self.conn.commit()
 
     def add(self, embedding: list, **kwargs) -> str:
-        id = str(uuid.uuid4())
+        vector_id = get_query_index(self.identifier)
         with self.conn.cursor() as cur:
             cur.execute(f"INSERT INTO {self.table_name} (id, embedding) VALUES (%s, %s)", (id, embedding))
             self.conn.commit()
-        return id
+        return vector_id
 
     def search(self, embedding: list, top_n: int = 1, include_distances=True, **kwargs) -> Tuple[list, list]:
         with self.conn.cursor() as cur:

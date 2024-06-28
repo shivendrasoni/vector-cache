@@ -3,12 +3,15 @@ from qdrant_client import QdrantClient
 from qdrant_client.http import models
 from vector_cache.vector_stores.base import VectorStoreInterface
 from typing import Tuple
+from typing import Union, Callable
+from vector_cache.utils.key_util import get_query_index
 
 class QdrantStore(VectorStoreInterface):
-    def __init__(self, collection_name: str = "default_collection", host: str = "localhost", port: int = 6333):
+    def __init__(self, collection_name: str = "default_collection", host: str = "localhost", port: int = 6333, identifier: Union[str, Callable, None] = None):
         self.client = QdrantClient(host=host, port=port)
         self.collection_name = collection_name
         self.create_collection()
+        self.identifier = identifier
 
     def create_collection(self):
         try:
@@ -20,8 +23,9 @@ class QdrantStore(VectorStoreInterface):
             if "already exists" not in str(e):
                 raise
 
-    def add(self, embedding: list, **kwargs) -> str:
-        id = str(uuid.uuid4())
+    def add(self, embedding: list,  **kwargs) -> str:
+        vector_id = get_query_index(self.identifier)
+
         self.client.upsert(
             collection_name=self.collection_name,
             points=[models.PointStruct(id=id, vector=embedding)]

@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
 from typing import Tuple
+from typing import Union, Callable
 
 
 class VectorStoreInterface(ABC):
     @abstractmethod
-    def add(self, embedding: list, **kwargs) -> str:
+    def add(self, embedding: list,  **kwargs) -> str:
         pass
 
     @abstractmethod

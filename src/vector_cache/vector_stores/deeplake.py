@@ -3,9 +3,11 @@ import deeplake  # Hypothetical, replace with actual DeepLake client import
 import numpy as np
 import uuid
 from vector_cache.vector_stores.base import VectorStoreInterface
+from typing import Union, Callable
+from vector_cache.utils.key_util import get_query_index
 #WIP : DO NOT USE YET
 class DeepLakeVectorStore(VectorStoreInterface):
-    def __init__(self, index_name: str, api_key: str):
+    def __init__(self, index_name: str, api_key: str, identifier: Union[str, Callable, None] = None):
         """
         Initialize the DeepLake vector store client.
 
@@ -17,8 +19,9 @@ class DeepLakeVectorStore(VectorStoreInterface):
         deeplake.init(api_key=api_key)
         self.index_name = index_name
         self.index = deeplake.Index(index_name)  # Hypothetical way to access an index
+        self.identifier = identifier
 
-    def add(self, embedding: list, **kwargs):
+    def add(self, embedding: list, **kwargs) -> str:
         """
         Add an vector_cache.embedding to the DeepLake index.
 
@@ -29,7 +32,7 @@ class DeepLakeVectorStore(VectorStoreInterface):
         - A reference to the index where it's stored (in DeepLake, this might be an 'id').
         """
         # Generate a new UUID if an 'id' is not provided in kwargs.
-        vector_id = kwargs.get("id", str(uuid.uuid4()))
+        vector_id = get_query_index(self.identifier)
 
         # Convert list to numpy array if not already
         if not isinstance(embedding, np.ndarray):

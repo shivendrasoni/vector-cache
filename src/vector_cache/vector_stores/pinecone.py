@@ -3,9 +3,11 @@ import pinecone
 import numpy as np
 import uuid
 from vector_cache.vector_stores.base import VectorStoreInterface
+from typing import Union, Callable
+from vector_cache.utils.key_util import get_query_index
 
 class PineconeVectorStore(VectorStoreInterface):
-    def __init__(self, index_name: str, api_key: str, environment: str = 'us-west1-gcp'):
+    def __init__(self, index_name: str, api_key: str, environment: str = 'us-west1-gcp', identifier: Union[str, Callable, None] = None):
         """
         Initialize the Pinecone vector store client.
 
@@ -18,24 +20,27 @@ class PineconeVectorStore(VectorStoreInterface):
         self.index_name = index_name
         self.create_index()
         self.index = pinecone.Index(index_name)
+        self.identifier = identifier
 
     def create_index(self):
         """Create the Pinecone index if it doesn't exist."""
         if self.index_name not in pinecone.list_indexes():
             pinecone.create_index(self.index_name, dimension=1536, metric="cosine")
 
-    def add(self, embedding: Union[list, np.ndarray], **kwargs) -> str:
+    def add(self, embedding: list, **kwargs) -> str:
+
         """
         Add an embedding to the Pinecone index.
 
         Parameters:
         - embedding: The embedding to add, as a list or numpy array.
+        - identifier: How to identify different_keys, can be prefix string, a function or None (default)
         - **kwargs: Additional keyword arguments.
 
         Returns:
         - A reference to the index where it's stored (in Pinecone, this is the 'id').
         """
-        vector_id = kwargs.get("id", str(uuid.uuid4()))
+        vector_id = get_query_index(identifier)
 
         if isinstance(embedding, np.ndarray):
             embedding = embedding.tolist()

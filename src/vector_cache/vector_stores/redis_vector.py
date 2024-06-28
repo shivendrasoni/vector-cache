@@ -6,9 +6,11 @@ from redis.commands.search.field import VectorField
 from redis.commands.search.indexDefinition import IndexDefinition, IndexType
 from redis.commands.search.query import Query
 from vector_cache.vector_stores.base import VectorStoreInterface
+from typing import Union, Callable
+from vector_cache.utils.key_util import get_query_index
 
 class RedisVectorStore(VectorStoreInterface):
-    def __init__(self, index_name: str, redis_url: str = "redis://localhost:6379", vector_dim: int = 1536):
+    def __init__(self, index_name: str, redis_url: str = "redis://localhost:6379", vector_dim: int = 1536, identifier: Union[str, Callable, None] = None):
         """
         Initialize the Redis vector store client.
 
@@ -21,6 +23,7 @@ class RedisVectorStore(VectorStoreInterface):
         self.index_name = index_name
         self.vector_dim = vector_dim
         self.create_index()
+        self.identifier = identifier
 
     def create_index(self):
         """Create the Redis index if it doesn't exist."""
@@ -37,7 +40,7 @@ class RedisVectorStore(VectorStoreInterface):
                 definition=IndexDefinition(prefix=[f"{self.index_name}:"], index_type=IndexType.HASH)
             )
 
-    def add(self, embedding: Union[list, np.ndarray], **kwargs) -> str:
+    def add(self, embedding: list, **kwargs) -> str:
         """
         Add an embedding to the Redis index.
 
@@ -48,7 +51,8 @@ class RedisVectorStore(VectorStoreInterface):
         Returns:
         - A reference to the index where it's stored (in Redis, this is the key).
         """
-        vector_id = kwargs.get("id", str(uuid.uuid4()))
+        vector_id = get_query_index(self.identifier)
+
 
         if isinstance(embedding, np.ndarray):
             embedding = embedding.tolist()
