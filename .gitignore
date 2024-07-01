@@ -6,4 +6,5 @@ __pycache__
 build
 dist
 *.rdb
-/*/vector_cache.egg-info/
+/**/vector_cache.egg-info/
+/**/.DS_Store

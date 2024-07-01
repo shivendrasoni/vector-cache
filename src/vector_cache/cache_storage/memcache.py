@@ -1,7 +1,7 @@
 from vector_cache.cache_storage.base import CacheStorageInterface
 from pymemcache.client.base import Client
 
-class MemcacheCache(CacheStorageInterface):
+class MemcacheCached(CacheStorageInterface):
     def __init__(self, host: str = 'localhost', port: int = 11211):
         self.client = Client((host, port))
 

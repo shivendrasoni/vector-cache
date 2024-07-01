@@ -6,7 +6,7 @@ from typing import Tuple
 from typing import Union, Callable
 from vector_cache.utils.key_util import get_query_index
 
-class QdrantStore(VectorStoreInterface):
+class QdrantVectorStore(VectorStoreInterface):
     def __init__(self, collection_name: str = "default_collection", host: str = "localhost", port: int = 6333, identifier: Union[str, Callable, None] = None):
         self.client = QdrantClient(host=host, port=port)
         self.collection_name = collection_name
