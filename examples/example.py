@@ -9,7 +9,7 @@ embedding_size = model.dimension
 # Initialize components
 
 vector_store = ChromaDB()
-semantic_cache = VectorCache(model, db, vector_store, cosine_threshold=0.8)
+semantic_cache = VectorCache(model, db, vector_store, initial_similarity_threshold=0.8)
 
 
 # Usage

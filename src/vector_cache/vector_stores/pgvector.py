@@ -43,7 +43,7 @@ class PGVector(VectorStoreInterface):
             results = cur.fetchall()
 
         ids = [str(result[0]) for result in results]
-        distances = [1 - result[1] for result in results] if include_distances else None
+        distances = [result[1] for result in results] if include_distances else None
 
         return (ids, distances) if include_distances else (ids,)
 

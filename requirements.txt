@@ -1,5 +1,3 @@
 chromadb
 numpy
 openai
-redis
-sentence-transformers

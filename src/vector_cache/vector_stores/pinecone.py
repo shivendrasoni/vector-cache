@@ -40,7 +40,7 @@ class PineconeVectorStore(VectorStoreInterface):
         Returns:
         - A reference to the index where it's stored (in Pinecone, this is the 'id').
         """
-        vector_id = get_query_index(identifier)
+        vector_id = get_query_index(self.identifier)
 
         if isinstance(embedding, np.ndarray):
             embedding = embedding.tolist()

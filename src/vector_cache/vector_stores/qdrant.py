@@ -42,7 +42,7 @@ class QdrantVectorStore(VectorStoreInterface):
         ids = [str(point.id) for point in search_result]
 
         if include_distances:
-            distances = [1 - point.score for point in search_result]  # Convert similarity to distance
+            distances = [point.score for point in search_result]
             return ids, distances
         else:
             return (ids,)

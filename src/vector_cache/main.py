@@ -9,7 +9,7 @@ import logging
 
 class VectorCache:
     def __init__(self, embedding_model: BaseEmbedding, db: CacheStorageInterface, vector_store: VectorStoreInterface,
-                 initial_similarity_threshold: float = 0.99, target_hit_rate: float = 0.8,
+                 initial_similarity_threshold: float = 0.8, target_hit_rate: float = 0.8,
                  min_threshold: float = 0.7, max_threshold: float = 1.99,
                  adjustment_rate: float = 0.01, verbose=False, use_adjustable_threshold=False):
         self.embedding_model = embedding_model

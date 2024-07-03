@@ -17,13 +17,13 @@ if os.path.isfile("requirements.txt"):
 
 # Define extras_require for different vector stores
 extras_require = {
-    'chromadb': ['chromadb'],
     'pgvector': ['psycopg2-binary', 'pgvector'],
     'qdrant': ['qdrant-client'],
     'pinecone': ['pinecone-client'],
     'redis': ['redis'],
     'memcache': ['pymemcache'],
-    'cohere': ['cohere']
+    'cohere': ['cohere'],
+    'sentence-transformers': ['sentence-transformers']
 }
 
 # Add 'all' option which includes all extra dependencies

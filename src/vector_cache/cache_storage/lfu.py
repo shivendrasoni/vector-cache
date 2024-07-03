@@ -3,7 +3,7 @@ from vector_cache.cache_storage.base import CacheStorageInterface
 
 
 class LFUCache(CacheStorageInterface):
-    def __init__(self, capacity: int):
+    def __init__(self, capacity: int=500):
         self.capacity = capacity
         self.cache = {}  # stores the query_index: (response, frequency)
         self.freq = defaultdict(OrderedDict)  # stores frequency: {query_index: response}

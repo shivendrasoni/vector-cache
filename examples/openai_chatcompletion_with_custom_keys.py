@@ -4,17 +4,19 @@ from vector_cache.embedding import OpenAIEmbeddings
 from vector_cache.cache_storage import RedisStorage
 from openai import OpenAI
 import os
+
 embedding_model = OpenAIEmbeddings(api_key=os.environ.get("OPENAI_API_KEY"))
 db = RedisStorage()
 import time
+
 # Initialize components
+
+# lambda to generate key using time in millisecond
 key_generator = lambda: f"inventory_{str(int(round(time.time() * 1000)))}"
+
 vector_store = ChromaDB(persistent=True, identifier=key_generator)
-#lambda to generate key using time in milliseconds
 
-
-
-semantic_cache = VectorCache(embedding_model, db, vector_store, cosine_threshold=0.9, verbose=True)
+semantic_cache = VectorCache(embedding_model, db, vector_store, initial_similarity_threshold=0.9, verbose=True)
 
 
 @semantic_cache_decorator(semantic_cache)

@@ -3,7 +3,7 @@ from vector_cache.cache_storage.base import CacheStorageInterface
 
 
 class LRUCache(CacheStorageInterface):
-    def __init__(self, capacity: int):
+    def __init__(self, capacity: int=500):
         self.cache = OrderedDict()
         self.capacity = capacity
 

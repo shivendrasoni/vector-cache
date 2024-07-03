@@ -98,7 +98,7 @@ vector_store = PineconeVectorStore(index_name="my_index", api_key="your_api_key"
 semantic_cache = VectorCache(embedding_model, db, vector_store, cosine_threshold=0.9, verbose=True)
 ```
 
-### Redis
+### Redis [Needs redis-search to be running]
 
 ```bash
 pip install vector-cache[redis]
