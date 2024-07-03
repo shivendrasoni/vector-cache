@@ -28,14 +28,18 @@ class VectorCache:
         self.cache_hits = 0
 
     @time_measurement
-    def add_query_to_index(self, query: str, response: str):
-        embedding = self.embedding_model.get_embeddings(query)
+    def add_query_to_index(self, query: str, response: str, context:str='',):
+        embedding = self.get_context_aware_embedding(query, context)
         cache_key = self.vector_store.add(embedding)
         self.db.set_response(cache_key, response)
 
-    def find_similar_queries(self, query: str, search_k: int = 1, include_distances=True) -> Tuple[Optional[str], Optional[float]]:
+    def get_context_aware_embedding(self, query: str, context: str):
+        augmented_query = f"{context}: {query}"
+        return self.embedding_model.get_embeddings(augmented_query)
+
+    def find_similar_queries(self, query: str, context:str = '', search_k: int = 1, include_distances=True) -> Tuple[Optional[str], Optional[float]]:
         self.total_queries += 1
-        embedding = self.embedding_model.get_embeddings(query)
+        embedding = self.get_context_aware_embedding(query, context)
         nearest_indices, similarities = self.vector_store.search(embedding, search_k, include_distances)
 
         result = None
@@ -87,28 +91,24 @@ def semantic_cache_decorator(semantic_cache: VectorCache):
 
     def decorator(func):
         @wraps(func)
-        def wrapper(query, *args, **kwargs):
-            start_time = time.time()
-
+        def wrapper(query, context="", *args, **kwargs):
             # Try to find a cached response
             cached_response, distance = semantic_cache.find_similar_queries(query)
 
             if cached_response is not None:
                 # If a cached response exists, return it
-                end_time = time.time()
-                print_log(f"Cache Hit: Query: {query}, response: {cached_response} (distance: {distance:.4f}, time: {end_time - start_time:.4f}s)")
+                print(f"Cache Hit: Query: {query}, Context: {context}, Distance: {distance:.4f}")
                 return cached_response
 
-            print_log(f"Cache Miss: {query}")
+            print(f"Cache Miss: Query: {query}, Context: {context}")
 
             # If there is no cached response, call the actual function
-            response = func(query, *args, **kwargs)
+            response = func(query, context, *args, **kwargs)
 
             # Add the query-response pair to the cache
-            semantic_cache.add_query_to_index(query, response)
+            semantic_cache.add_query_to_index(query, response, context)
 
-            end_time = time.time()
-            print_log(f"Function call: Query: {query}, response: {response} (time: {end_time - start_time:.4f}s)")
+            print_log(f"Function call: Query: {query}, response: {response}")
 
             # Return the actual function's response
             return response
