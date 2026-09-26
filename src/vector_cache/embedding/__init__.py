@@ -1,3 +1,7 @@
 from .openai import OpenAIEmbeddings
-from .sentence_bert import SentenceBertEmbeddings
+
+try:
+    from .sentence_bert import SentenceBertEmbeddings
+except ImportError:
+    SentenceBertEmbeddings = None
 # from .cohere import CohereEmbeddings

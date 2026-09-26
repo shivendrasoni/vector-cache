@@ -2,16 +2,48 @@ from vector_cache.utils.time_utils import time_measurement
 from vector_cache.cache_storage.base import CacheStorageInterface
 from vector_cache.vector_stores.base import VectorStoreInterface
 from vector_cache.embedding.base_embedding import BaseEmbedding
+from vector_cache.judges.base import BaseJudge, Candidate
+from vector_cache.utils.guards import negations_match, numbers_match
+import json
 import time
 from functools import wraps
-from typing import Tuple, Optional
+from typing import Any, Tuple, Optional
 import logging
+
+logger = logging.getLogger(__name__)
+
+ENTRY_MARKER = "__vector_cache__"
+
+
+def encode_entry(query: str, context: str, response: Any):
+    """Store the original query next to the response so a judge can compare against it later.
+
+    Responses that are not JSON serialisable are stored as-is (and cannot be judged).
+    """
+    try:
+        return json.dumps({ENTRY_MARKER: 1, "query": query, "context": context, "response": response})
+    except (TypeError, ValueError):
+        return response
+
+
+def decode_entry(raw) -> Tuple[Optional[str], Optional[str], Any]:
+    """Returns (query, context, response). Entries written before this format yield (None, None, raw)."""
+    if isinstance(raw, str):
+        try:
+            data = json.loads(raw)
+        except ValueError:
+            data = None
+        if isinstance(data, dict) and ENTRY_MARKER in data:
+            return data["query"], data["context"], data["response"]
+    return None, None, raw
 
 class VectorCache:
     def __init__(self, embedding_model: BaseEmbedding, db: CacheStorageInterface, vector_store: VectorStoreInterface,
                  initial_similarity_threshold: float = 0.8, target_hit_rate: float = 0.8,
                  min_threshold: float = 0.7, max_threshold: float = 1.99,
-                 adjustment_rate: float = 0.01, verbose=False, use_adjustable_threshold=False):
+                 adjustment_rate: float = 0.01, verbose=False, use_adjustable_threshold=False,
+                 judge: Optional[BaseJudge] = None, judge_band: Tuple[float, float] = (0.80, 0.95),
+                 judge_top_k: int = 3, check_cacheable: bool = False):
         self.embedding_model = embedding_model
         self.db = db
         self.vector_store = vector_store
@@ -23,15 +55,28 @@ class VectorCache:
         self.verbose = verbose
         self.use_adjustable_threshold =  use_adjustable_threshold
 
+        # Optional verifier for the grey zone between judge_band[0] (below: miss) and judge_band[1] (above: hit).
+        # When a judge is set, judge_band replaces similarity_threshold for hit decisions.
+        self.judge = judge
+        self.judge_band = judge_band
+        self.judge_top_k = judge_top_k
+        self.check_cacheable = check_cacheable
+        self.judge_calls = 0
+        self.judge_rejects = 0
+
         # Metrics for adaptive thresholding
         self.total_queries = 0
         self.cache_hits = 0
 
     @time_measurement
     def add_query_to_index(self, query: str, response: str, context:str='',):
+        if self.check_cacheable and self.judge is not None and not self.judge.is_cacheable(query, context, response):
+            if self.verbose:
+                print(f"Not cacheable, skipping insert: {query}")
+            return
         embedding = self.get_context_aware_embedding(query, context)
         cache_key = self.vector_store.add(embedding)
-        self.db.set_response(cache_key, response)
+        self.db.set_response(cache_key, encode_entry(query, context, response))
 
     def get_context_aware_embedding(self, query: str, context: str):
         augmented_query = f"{context}: {query}"
@@ -40,6 +85,15 @@ class VectorCache:
     def find_similar_queries(self, query: str, context:str = '', search_k: int = 1, include_distances=True) -> Tuple[Optional[str], Optional[float]]:
         self.total_queries += 1
         embedding = self.get_context_aware_embedding(query, context)
+
+        if self.judge is not None:
+            nearest_indices, similarities = self.vector_store.search(embedding, max(search_k, self.judge_top_k), True)
+            similarity = similarities[0] if nearest_indices else None
+            result = self._judged_lookup(query, context, nearest_indices, similarities) if nearest_indices else None
+            if result is not None:
+                self.cache_hits += 1
+            return result, similarity
+
         nearest_indices, similarities = self.vector_store.search(embedding, search_k, include_distances)
 
         result = None
@@ -49,13 +103,42 @@ class VectorCache:
             nearest_index = nearest_indices[0]
             similarity = similarities[0]
             if similarity > self.similarity_threshold:  # similarity threshold
-                cached_response = self.db.get_response(nearest_index)
+                _, _, cached_response = decode_entry(self.db.get_response(nearest_index))
                 self.cache_hits += 1
                 result = cached_response
 
         if self.use_adjustable_threshold:
             self._adjust_threshold()
         return result, similarity
+
+    def _judged_lookup(self, query: str, context: str, indices: list, similarities: list):
+        floor, ceiling = self.judge_band
+        candidates = []
+        for index, similarity in zip(indices, similarities):
+            if similarity < floor:
+                break  # results are sorted, the rest are lower
+            cached_query, cached_context, response = decode_entry(self.db.get_response(index))
+            if cached_query is None or response is None:
+                continue  # evicted, or legacy entry without the original query: cannot be verified
+            if not numbers_match(query, cached_query):
+                continue
+            # Near-exact matches skip the judge unless one side negates something the other does not.
+            if similarity >= ceiling and negations_match(query, cached_query):
+                return response
+            candidates.append(Candidate(cached_query, cached_context, response))
+
+        if not candidates:
+            return None
+
+        self.judge_calls += 1
+        verdict = self.judge.judge(query, context, candidates)
+        if verdict.index is None:
+            self.judge_rejects += 1
+            if verdict.uncertain:
+                # Worth reviewing: these pairs are the ones to calibrate judge_band / accept on.
+                logger.info("Uncertain judge verdict for %r: %s", query, verdict.probabilities)
+            return None
+        return candidates[verdict.index].response
 
     def _adjust_threshold(self):
         if self.total_queries == 0:

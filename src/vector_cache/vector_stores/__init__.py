@@ -1,4 +1,3 @@
-from .chroma_db import ChromaDB
 
 try:
     from .chroma_db import ChromaDB

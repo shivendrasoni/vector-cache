@@ -23,7 +23,8 @@ extras_require = {
     'redis': ['redis'],
     'memcache': ['pymemcache'],
     'cohere': ['cohere'],
-    'sentence-transformers': ['sentence-transformers']
+    'sentence-transformers': ['sentence-transformers'],
+    'typesafe': ['requests']
 }
 
 # Add 'all' option which includes all extra dependencies
