@@ -89,6 +89,46 @@ VectorCache is designed to work with any LLM provider. It includes modules for:
 ** Features: ** 
 - Adaptive Threshold (Alpha) : The vector cache can now incrementally adjust the similarity threshold till a desired hit rate is met. This should be used with caution as the high threshold can cause non-relevant matches to be returned.  
 
+### ⚖️ Verifying hits with a System One judge (optional)
+
+Embedding similarity is a fuzzy key: "cake with gluten" and "cake without gluten" can score above 0.95.
+A plain threshold then serves the wrong answer. A judge adds the equality check a normal cache gets for free:
+the vector store shortlists candidates, and a fast System One decision model confirms the match before a hit is served.
+
+The default judge is [TypeSafe Jev](https://docs.typesafe.ai/introduction) (vendor-quoted ~100 ms per call).
+Any other System One model (for example Laaya) can be used: point `TYPESAFE_API_URL` / `TYPESAFE_MODEL` at it if it
+is served behind the same `/v1/systemone` request shape, otherwise subclass `vector_cache.judges.BaseJudge`.
+
+```bash
+pip install "vector-cache[typesafe]"
+cp .env.example .env   # fill in TYPESAFE_API_KEY (and optionally TYPESAFE_MODEL / TYPESAFE_API_URL)
+```
+
+```python
+from vector_cache.judges import JevJudge
+
+vector_cache = VectorCache(
+    embedding_model=my_embedding_model,
+    db=my_cache_storage,
+    vector_store=my_vector_store,
+    judge=JevJudge(mode="query", accept=0.9),  # mode="answer" judges the cached response instead
+    judge_band=(0.80, 0.95),                   # < 0.80 miss, >= 0.95 served directly, in between -> judge
+    judge_top_k=3,                             # candidates sent to the judge in one call
+    check_cacheable=True,                      # skip caching time-sensitive, personal or failed responses
+)
+```
+
+How a lookup is decided when a judge is set:
+1. Candidates below `judge_band[0]` are a miss.
+2. Candidates whose numbers differ from the new query (`$300` vs `$500`, `2024` vs `2025`) are dropped, with no judge call.
+3. Candidates at or above `judge_band[1]` are served directly, unless one query has a negation the other lacks; those go to the judge.
+4. Everything else goes to the judge in one request. Judge errors and timeouts are treated as misses.
+
+`judge_band` replaces `similarity_threshold` (and adaptive thresholding) when a judge is set.
+`judge_calls` and `judge_rejects` on the cache track how often the judge ran and said no.
+Entries cached before this feature (no stored query) are never served through the judge path.
+See `examples/openai_chatcompletion_jev_judge.py`.
+
 ### 🔍 Vector Stores
 
 VectorCache supports multiple vector store options for efficient similarity search. For detailed information on how to use different vector stores, please refer to our [Vector Stores README](src/vector_cache/vector_stores/README.md).

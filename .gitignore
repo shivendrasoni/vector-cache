@@ -8,3 +8,4 @@ dist
 *.rdb
 /**/vector_cache.egg-info/
 /**/.DS_Store
+.env
