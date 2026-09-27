@@ -1,0 +1,186 @@
+[
+  {
+    "id": 1,
+    "name": "Paris France capital",
+    "seed_query": "What is the capital of France?",
+    "new_query": "Which city is France’s capital?",
+    "expected_hit": true,
+    "kind": "paraphrase"
+  },
+  {
+    "id": 2,
+    "name": "Mount Everest height",
+    "seed_query": "How tall is Mount Everest?",
+    "new_query": "What is the height of Mount Everest?",
+    "expected_hit": true,
+    "kind": "paraphrase"
+  },
+  {
+    "id": 3,
+    "name": "Australia capital",
+    "seed_query": "What is the capital city of Australia?",
+    "new_query": "What is Australia’s capital?",
+    "expected_hit": true,
+    "kind": "paraphrase"
+  },
+  {
+    "id": 4,
+    "name": "Spanish hello",
+    "seed_query": "How do you say hello in Spanish?",
+    "new_query": "What is the Spanish word for hello?",
+    "expected_hit": true,
+    "kind": "paraphrase"
+  },
+  {
+    "id": 5,
+    "name": "vegan cake",
+    "seed_query": "How do I make a vegan chocolate cake?",
+    "new_query": "How to bake a chocolate cake with no animal products?",
+    "expected_hit": true,
+    "kind": "paraphrase"
+  },
+  {
+    "id": 6,
+    "name": "photosynthesis",
+    "seed_query": "Explain photosynthesis in simple terms.",
+    "new_query": "What is photosynthesis, simply explained?",
+    "expected_hit": true,
+    "kind": "paraphrase"
+  },
+  {
+    "id": 7,
+    "name": "boiling water",
+    "seed_query": "At sea level, what temperature does water boil at?",
+    "new_query": "What is the boiling point of water at sea level?",
+    "expected_hit": true,
+    "kind": "paraphrase"
+  },
+  {
+    "id": 8,
+    "name": "Python list append",
+    "seed_query": "How do I append to a Python list?",
+    "new_query": "What Python method adds an item to the end of a list?",
+    "expected_hit": true,
+    "kind": "paraphrase"
+  },
+  {
+    "id": 9,
+    "name": "Jupiter moons",
+    "seed_query": "How many moons does Jupiter have?",
+    "new_query": "What is the number of moons orbiting Jupiter?",
+    "expected_hit": true,
+    "kind": "paraphrase"
+  },
+  {
+    "id": 10,
+    "name": "gluten free pasta",
+    "seed_query": "What are gluten-free pasta alternatives?",
+    "new_query": "Can you suggest pasta alternatives without gluten?",
+    "expected_hit": true,
+    "kind": "paraphrase"
+  },
+  {
+    "id": 11,
+    "name": "Canada capital",
+    "seed_query": "What is Canada’s capital?",
+    "new_query": "Name the capital of Canada.",
+    "expected_hit": true,
+    "kind": "paraphrase"
+  },
+  {
+    "id": 12,
+    "name": "Mars red planet",
+    "seed_query": "Why is Mars called the red planet?",
+    "new_query": "What makes the planet Mars look red?",
+    "expected_hit": true,
+    "kind": "paraphrase"
+  },
+  {
+    "id": 13,
+    "name": "laptop budget",
+    "seed_query": "Recommend laptops under $500.",
+    "new_query": "Recommend laptops under $300.",
+    "expected_hit": false,
+    "kind": "number"
+  },
+  {
+    "id": 14,
+    "name": "population years",
+    "seed_query": "What was the population in 2020?",
+    "new_query": "What was the population in 2021?",
+    "expected_hit": false,
+    "kind": "number"
+  },
+  {
+    "id": 15,
+    "name": "recipe temperature",
+    "seed_query": "Bake bread at 180 C: how long?",
+    "new_query": "Bake bread at 200 C: how long?",
+    "expected_hit": false,
+    "kind": "number"
+  },
+  {
+    "id": 16,
+    "name": "gluten inclusion",
+    "seed_query": "How can I bake a cake with gluten?",
+    "new_query": "How can I bake a cake without gluten?",
+    "expected_hit": false,
+    "kind": "negation"
+  },
+  {
+    "id": 17,
+    "name": "no sugar",
+    "seed_query": "What desserts contain no sugar?",
+    "new_query": "What desserts contain sugar?",
+    "expected_hit": false,
+    "kind": "negation"
+  },
+  {
+    "id": 18,
+    "name": "exclude peanuts",
+    "seed_query": "Suggest snacks excluding peanuts.",
+    "new_query": "Suggest snacks including peanuts.",
+    "expected_hit": false,
+    "kind": "negation"
+  },
+  {
+    "id": 19,
+    "name": "gluten-free",
+    "seed_query": "Which breads are gluten-free?",
+    "new_query": "Which breads contain gluten?",
+    "expected_hit": false,
+    "kind": "constraint"
+  },
+  {
+    "id": 20,
+    "name": "API authentication",
+    "seed_query": "How do I authenticate an API request?",
+    "new_query": "How do I authorize an API request?",
+    "expected_hit": false,
+    "kind": "entity"
+  },
+  {
+    "id": 21,
+    "name": "Paris Texas",
+    "seed_query": "What is the population of Paris, Texas?",
+    "new_query": "What is the population of Paris, France?",
+    "expected_hit": false,
+    "kind": "entity"
+  },
+  {
+    "id": 22,
+    "name": "flight date",
+    "seed_query": "What is the flight status for Monday?",
+    "new_query": "What is the flight status for Tuesday?",
+    "expected_hit": false,
+    "kind": "time"
+  },
+  {
+    "id": 23,
+    "name": "Java versions",
+    "seed_query": "How to install Java 8?",
+    "new_query": "How to install Java 11?",
+    "expected_hit": false,
+    "kind": "number"
+  }
+]
