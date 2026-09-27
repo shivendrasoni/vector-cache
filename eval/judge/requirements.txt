@@ -1,0 +1,4 @@
+# Install the package itself first: pip install -e '.[sentence-transformers,typesafe]'
+chromadb>=1.5,<2
+sentence-transformers>=3,<6
+requests>=2.31,<3
